@@ -1,5 +1,10 @@
 const puppeteer = require('puppeteer');
 
+// Generate a random delay value
+const randomValueGenerator = (max) => {
+  return Math.round(Math.random() * max);
+}
+
 (async () => {
 
   /* Initialize Puppeteer */
@@ -37,6 +42,9 @@ const puppeteer = require('puppeteer');
     // Focus on the input element and enter the userCode
     await latestPage.focus('#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div.form__control.form__control--vertical > div.form__field > div');
     await latestPage.keyboard.type(userCode);
+
+    // Get a random delay value
+    const delay = randomValueGenerator(7);
     
   } catch (e) {
     console.log("Signup error", e);
