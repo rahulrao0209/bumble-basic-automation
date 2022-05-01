@@ -19,9 +19,10 @@ const swipe = async (page) => {
 
     console.log("Page: ", page);
     
-    await page.waitForNavigation();
+    await page.waitForNavigation(); 
     const pass = await page.$(passBtn);
     console.log("PASS: ", pass);
+
     // if(pass) {
     //   console.log("PASS BUTTON: ",  page.$(passBtn));
     //   // await page.click(passBtn);
@@ -67,18 +68,18 @@ const swipe = async (page) => {
 
   // New page opens, click on signin in with phone number
   try {
-    const pages = await browser.pages();
-    const latestPage = pages[1];
-    await latestPage.waitForNavigation();
+    let pages = await browser.pages();
+    let latestPage = pages[pages.length - 1];
 
-    if(await latestPage.$(signInWithPhone)) {
-      await latestPage.click(signInWithPhone);
-    }
+    await latestPage.waitForNavigation();
+    await latestPage.waitForSelector(signInWithPhone);
+    await latestPage.click(signInWithPhone);
 
     // Enter the phone number
     await latestPage.keyboard.type('8369777276');
 
     // Click to continue button to login
+    await latestPage.waitForSelector(continueBtn);
     await latestPage.click(continueBtn);
 
     // Prompt the user for the code
@@ -86,16 +87,21 @@ const swipe = async (page) => {
     const userCode = prompt('Enter the code: ');
 
     // Focus on the input element and enter the userCode
+    await latestPage.waitForSelector(inputCode);
     await latestPage.focus(inputCode);
     await latestPage.keyboard.type(userCode);
     
-    const freshPage = await browser.newPage();
-    const appPage = await freshPage.goto('https://bumble.com/app');
+    pages = await browser.pages();
+    console.log("PAGES: ". pages.length);
+    latestPage = pages[pages.length - 1];
+
+    console.log("PAGE: - ", latestPage);
+    // await latestPage.waitForNavigation();
   
 
     // Swipe
     try {
-      swipe(appPage);
+      swipe(latestPage);
     } catch (e) {
       console.log("Exception", e);
     }
