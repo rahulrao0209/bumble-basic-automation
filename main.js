@@ -1,7 +1,7 @@
-const puppeteer = require('puppeteer');
+const { chromium } = require('playwright');
 
 // Selectors 
-const signup = '#__next > main > header > div > div > div.header__actions > div.header__actions-item.header__actions-item--sign-in > a';
+const signin = '#__next > main > header > div > div > div.header__actions > div.header__actions-item.header__actions-item--sign-in > a';
 const signInWithPhone = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div:nth-child(3) > div > span > span > span';
 const inputCode = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div.form__control.form__control--vertical > div.form__field > div';
 const continueBtn = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div:nth-child(4) > button';
@@ -49,64 +49,71 @@ const swipe = async (page) => {
 
 (async () => {
 
-  /* Initialize Puppeteer */
-  const browser = await puppeteer.launch({ headless: false});
+  /* Initialize Playwright to use chromium */
+  const browser = await chromium.launch({ headless: false, slowMo: 200 });
   const page = await browser.newPage();
-  await page.setViewport({
-    width: 1300,
-    height: 930,
-    deviceScaleFactor: 1,
-  });
 
   // Go to page
   await page.goto('https://bumble.com/en/the-buzz/bumble-web-the-same-experience-without-your-phone');
 
   // Click on signup
-  if(await page.$(signup)) {
-    await page.click(signup);
-  }
+  await page.click(signin);
 
-  // New page opens, click on signin in with phone number
-  try {
-    let pages = await browser.pages();
-    let latestPage = pages[pages.length - 1];
+  // Click on sigin with phone number
+  await page.click(signInWithPhone);
 
-    await latestPage.waitForNavigation();
-    await latestPage.waitForSelector(signInWithPhone);
-    await latestPage.click(signInWithPhone);
+  // Enter the phone number
+  await page.keyboard.type('8369777276');
 
-    // Enter the phone number
-    await latestPage.keyboard.type('8369777276');
+  // Click continue
+  await page.click(continueBtn);
 
-    // Click to continue button to login
-    await latestPage.waitForSelector(continueBtn);
-    await latestPage.click(continueBtn);
+  // Click on signup
+  // if(await page.$(signin)) {
+  //   await page.click(signin);
+  // }
 
-    // Prompt the user for the code
-    const prompt = require('prompt-sync')();
-    const userCode = prompt('Enter the code: ');
+  // // New page opens, click on signin in with phone number
+  // try {
+  //   let pages = await browser.pages();
+  //   let latestPage = pages[pages.length - 1];
 
-    // Focus on the input element and enter the userCode
-    await latestPage.waitForSelector(inputCode);
-    await latestPage.focus(inputCode);
-    await latestPage.keyboard.type(userCode);
+  //   await latestPage.waitForNavigation();
+  //   await latestPage.waitForSelector(signInWithPhone);
+  //   await latestPage.click(signInWithPhone);
+
+  //   // Enter the phone number
+  //   await latestPage.keyboard.type('8369777276');
+
+  //   // Click to continue button to login
+  //   await latestPage.waitForSelector(continueBtn);
+  //   await latestPage.click(continueBtn);
+
+  //   // Prompt the user for the code
+  //   const prompt = require('prompt-sync')();
+  //   const userCode = prompt('Enter the code: ');
+
+  //   // Focus on the input element and enter the userCode
+  //   await latestPage.waitForSelector(inputCode);
+  //   await latestPage.focus(inputCode);
+  //   await latestPage.keyboard.type(userCode);
     
-    pages = await browser.pages();
-    console.log("PAGES: ". pages.length);
-    latestPage = pages[pages.length - 1];
+  //   pages = await browser.pages();
+  //   console.log("PAGES: ". pages.length);
+  //   latestPage = pages[pages.length - 1];
 
-    console.log("PAGE: - ", latestPage);
-    // await latestPage.waitForNavigation();
+  //   console.log("PAGE: - ", latestPage);
+  //   // await latestPage.waitForNavigation();
   
 
-    // Swipe
-    try {
-      swipe(latestPage);
-    } catch (e) {
-      console.log("Exception", e);
-    }
+  //   // Swipe
+  //   try {
+  //     swipe(latestPage);
+  //   } catch (e) {
+  //     console.log("Exception", e);
+  //   }
     
-  } catch (e) {
-    console.log("Signup error", e);
-  }
+  // } catch (e) {
+  //   console.log("Signup error", e);
+  // }
 })();
