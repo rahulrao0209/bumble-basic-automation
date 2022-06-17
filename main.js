@@ -5,24 +5,22 @@ const signin = '#__next > main > header > div > div > div.header__actions > div.
 const signInWithPhone = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div:nth-child(3) > div > span > span > span';
 const inputCode = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div.form__control.form__control--vertical > div.form__field > div';
 const continueBtn = '#main > div > div.page__layout > div.page__content > main > div > div.registration__form > form > div:nth-child(4) > button';
-const passBtn = '#main > div > div.page__layout > main > div.page__content-inner > div > div > span > div.encounters-user__controls > div > div:nth-child(2) > div > div:nth-child(2) > div > div.encounters-action__icon';
-const smashBtn = '#main > div > div.page__layout > main > div.page__content-inner > div > div > span > div.encounters-user__controls > div > div:nth-child(2) > div > div:nth-child(4) > div > div.encounters-action__icon';
+
 
 // Generate a random delay value
 const randomValueGenerator = (max) => {
-  return Math.round(Math.random() * max) * 1000;
+  return Math.round(Math.random() * max) * 100;
 }
 
 // Generic Swipe Logic
 const swipe = async (page) => {    
-    const delay = randomValueGenerator(7);
-    for(let count = 0; count < 10; count++) {
-      console.log("Count: " + count);
-          if(count % 4 === 0 || count % 7 === 0 || count % 9 === 0) {
-            await page.click(passBtn);
-          } else {
-            await page.click(smashBtn);
-          }
+    for(let count = 0; count < 20; count++) {
+      let delay = randomValueGenerator(8);
+        if(count % 4 === 0 || count % 7 === 0 || count % 9 === 0) {
+            await page.keyboard.press('ArrowRight', {delay: delay < 100 ? 500 : delay});
+        } else {
+            await page.keyboard.press('ArrowLeft', {delay: delay < 100 ? 500 : delay});
+        }
      }
 }
 
