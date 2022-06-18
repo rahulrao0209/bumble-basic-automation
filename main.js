@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const prompt = require('prompt-sync')();
 
 // Selectors 
 const signin = '#__next > main > header > div > div > div.header__actions > div.header__actions-item.header__actions-item--sign-in > a';
@@ -13,8 +14,11 @@ const randomValueGenerator = (max) => {
 }
 
 // Generic Swipe Logic
-const swipe = async (page) => {    
-    for(let count = 0; count < 20; count++) {
+const swipe = async (page) => {
+  // Wait for the required page to load before swiping using keypress
+  page.waitForNavigation({url: "https://bumble.com/app"});
+  
+    for(let count = 0; count < 30; count++) {
       let delay = randomValueGenerator(8);
         if(count % 4 === 0 || count % 7 === 0 || count % 9 === 0) {
             await page.keyboard.press('ArrowRight', {delay: delay < 100 ? 500 : delay});
@@ -47,7 +51,6 @@ const swipe = async (page) => {
   await page.click(continueBtn);
 
   // Prompt the user for the code
-  const prompt = require('prompt-sync')();
   const userCode = prompt('Enter the code: ');
 
   // Focus on the input code element
