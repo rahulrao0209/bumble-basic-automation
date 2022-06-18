@@ -1,6 +1,6 @@
 ### Bumble Basic Automation
 
-This repo contains code to automate bumble web application login process using puppeteer.
+This repo contains code to automate bumble web application login process using playwright.
 
 How to run?
 - Clone the repository
