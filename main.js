@@ -1,4 +1,4 @@
-const { chromium } = require('playwright');
+const { firefox } = require('playwright');
 const prompt = require('prompt-sync')();
 
 // Selectors 
@@ -16,9 +16,9 @@ const randomValueGenerator = (max) => {
 // Generic Swipe Logic
 const swipe = async (page) => {
   // Wait for the required page to load before swiping using keypress
-  page.waitForNavigation({url: "https://bumble.com/app"});
+  await page.waitForNavigation({url: "https://bumble.com/app"});
   
-    for(let count = 0; count < 30; count++) {
+    for(let count = 0; count < 75; count++) {
       let delay = randomValueGenerator(8);
         if(count % 4 === 0 || count % 7 === 0 || count % 9 === 0) {
             await page.keyboard.press('ArrowRight', {delay: delay < 100 ? 500 : delay});
@@ -32,7 +32,7 @@ const swipe = async (page) => {
 (async () => {
 
   /* Initialize Playwright to use chromium */
-  const browser = await chromium.launch({ headless: false, slowMo: 200 });
+  const browser = await firefox.launch({ headless: false, slowMo: 200 });
   const page = await browser.newPage();
 
   // Go to page
