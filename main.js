@@ -18,10 +18,12 @@ const randomValueGenerator = (max) => {
 
 // Generic Swipe Logic
 const swipe = async (page) => {
-  // Wait for the required page to load before swiping using keypress
-  await page.waitForNavigation({ url: "https://bumble.com/app" });
+  // Prompt the user for a swipe count.
+  const swipeCount = +prompt("Enter the swipe count: ");
 
-  for (let count = 0; count < 75; count++) {
+  if (typeof swipeCount !== "number") return;
+
+  for (let count = 0; count < swipeCount; count++) {
     let delay = randomValueGenerator(8);
     if (count % 4 === 0 || count % 7 === 0 || count % 9 === 0) {
       await page.keyboard.press("ArrowRight", {
@@ -66,11 +68,25 @@ const swipe = async (page) => {
   // Enter the code
   await page.keyboard.type(userCode);
 
+  // Wait for the required page to load before swiping using keypress
+  await page.waitForNavigation({ url: "https://bumble.com/app" });
+
   // Swipe
   try {
     await swipe(page);
   } catch {
     await swipe(page);
+  }
+
+  // Prompt the user to stop swiping or continue
+  const shouldContinue = prompt("Continue swiping?(Enter Y or N): ");
+
+  if (shouldContinue === "y" || shouldContinue === "Y") {
+    try {
+      await swipe(page);
+    } catch {
+      await swipe(page);
+    }
   }
 
   // Close browser when done swiping
