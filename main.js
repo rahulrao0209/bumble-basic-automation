@@ -35,6 +35,13 @@ const swipe = async (page) => {
       });
     }
   }
+
+  // Prompt the user to stop swiping or continue
+  const shouldContinue = prompt("Continue swiping?(Enter Y or N): ");
+
+  if (shouldContinue === "y" || shouldContinue === "Y") {
+    await swipe(page);
+  }
 };
 
 (async () => {
@@ -76,17 +83,6 @@ const swipe = async (page) => {
     await swipe(page);
   } catch {
     await swipe(page);
-  }
-
-  // Prompt the user to stop swiping or continue
-  const shouldContinue = prompt("Continue swiping?(Enter Y or N): ");
-
-  if (shouldContinue === "y" || shouldContinue === "Y") {
-    try {
-      await swipe(page);
-    } catch {
-      await swipe(page);
-    }
   }
 
   // Close browser when done swiping
